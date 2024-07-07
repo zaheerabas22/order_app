@@ -1,52 +1,46 @@
 # order_app
-**overview**
 
+## Overview
 
- This Flutter project focuses on creating an order management application.
- Here's an overview of what I've done:
+This Flutter project focuses on creating an order management application. Here's an overview of what I've done:
 
-**State Management**: I've utilized GetX for state management.
-**UI Design**: The UI is designed to be professional with specific color schemes (AppColors) and an organized layout using Flutter's widgets (Column, Row, ListView, Stack, etc.).
- The whole design is according to the requirements of The given design(Figma). 
- 
-**API Integration**: Fetched data from API.
+### State Management
+- Utilized GetX for efficient state management.
 
-**Quality**: The project code is clean, maintained, and well-documented.
+### UI Design
+- Designed a professional UI with specific color schemes (AppColors) and an organized layout using Flutter's widgets (Column, Row, ListView, Stack, etc.).
+- The design adheres to the requirements specified in Figma designs.
 
-**Responsiveness**: The project is developed so that the UI is responsive and looks good on different screen sizes.
+### API Integration
+- Integrated API to fetch product data dynamically.
 
-**Product List/Table**: Displayed a list/table where users can input product details.
+### Quality
+- Maintained clean and well-documented code for better readability and maintainability.
 
-o Each row has fields for 'Product Name' and 'Quantity'.
+### Responsiveness
+- Developed the UI to be responsive, ensuring a seamless experience across different screen sizes.
 
-o Users can add as many rows as they want. For that, **I created a floating button by which a new row can be generated.**
+### Product List/Table
+- Implemented a dynamic list/table where users can input product details like 'Product Name' and 'Quantity'.
+- Users can add new rows dynamically using a floating button.
+- Incorporated autocomplete functionality for the 'Product Name' field, suggesting products based on API data.
 
-o Implemented an autocomplete feature for the 'Product Name' field to suggest products as the user types, and this data is fetched from API.
+### Dynamic Button States
+- Included an 'arrow forward' icon for navigation to the next screen.
+- Initially disabled, the button becomes enabled once at least one row in the table is filled.
 
-o Fetched the list of products from the provided API.
+### Autocomplete
+- Integrated autocomplete for product names to facilitate quick selection by users.
 
-o Users can type the product name manually or select from the autocomplete list.
+### Add Notes and Images
+- Implemented functionality where users can add notes and images to product entries.
+- Users can open a modal by double-tapping or long-pressing on a row where a product name is entered.
+- The modal allows writing notes and selecting images, displaying corresponding icons (info or camera) in the row based on user actions.
 
-**Dynamic Button States**:
+## Usage
+To use the application:
+1. Enter product details (quantity and name) in the table.
+2. Navigate to the preview screen using the 'arrow forward' icon.
+3. Double-tap or long-press on a row to add notes or select images.
 
-o Included 'arrow forward' icon by which you can navigate to the next screen and the data the user entered will display as a list.
-
-o Initially, this button is disabled.
-
-o  The button will only be enabled when at least one row is filled in the table.
-
-**Autocomplete**: Integrated autocomplete functionality for product names (Autocomplete widget) to assist users in selecting products efficiently.
-
-**Add Notes and Images:**
-
-o Implemented a function so that when a user double-taps (or long-presses) on a row
-
-where a product name is typed, a modal will open.
-
-o The modal will allow the user to write notes and select images.
-
-o If notes are written, it will display an info icon in that row.
-
-o If an image is selected, it will display a camera icon in that row.
-
-To do this when the user enters the data of the product(quantity  and name)  as much user wants and then presses the arrow forward icon this will navigate the user to a preview screen and then by long pressing or by double tapping the row in which data is showing it will show a camera icon if the image is selected or info icon when a note is entered or both can show.
+This project aims to provide a comprehensive solution for managing orders efficiently. For any inquiries or issues, please feel free to contact me.
