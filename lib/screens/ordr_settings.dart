@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:order_app/common_widgets/custom_app_bar.dart';
 import 'package:order_app/constants/colors.dart';
 
 class OrderSettings extends StatelessWidget {
@@ -9,16 +10,7 @@ class OrderSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: const Text(" "),
-        backgroundColor: Colors.white,
-        title: Image.asset(
-          "assets/images/logo.png",
-          height: 120,
-        ),
-        centerTitle: true,
-        elevation: 0,
-      ),
+      appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 22),
         child: Column(

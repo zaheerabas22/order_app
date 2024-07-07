@@ -1,15 +1,13 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:order_app/screens/order_screen.dart';
+import 'package:order_app/controller/product_controller.dart';
 import 'package:order_app/screens/order_screen_one.dart';
-import 'package:order_app/screens/order_screen_typed.dart';
-import 'package:order_app/screens/ordr_settings.dart';
-// import 'package:order_app/screens/order_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await injectControllers().then((value) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +21,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.publicSansTextTheme(),
       ),
-      home: OrderScreenTyped(),
+      home: const OrderScreenNoTyped(),
     );
   }
+}
+
+Future injectControllers() async {
+  Get.put(ProductController());
 }
