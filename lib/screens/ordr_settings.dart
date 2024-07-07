@@ -13,90 +13,95 @@ class OrderSettings extends StatelessWidget {
       appBar: const CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 22),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          scrollDirection: Axis.vertical,
           children: [
-            Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_sharp,
-                    color: AppColors.tealColor,
-                    size: 35,
-                  ),
-                )),
-            const SizedBox(height: 30),
-            const OrderSettingsText(
-              label: "Order#",
-              value: "112096",
-            ),
-            const SizedBox(height: 30),
-            const OrderSettingsText(
-              label: "Order name",
-              value: "Joe’s catering",
-            ),
-            const SizedBox(height: 30),
-            const OrderSettingsText(
-              label: "Delivery date",
-              value: "May 4th 3024",
-            ),
-            const SizedBox(height: 30),
-            const OrderSettingsText(
-              label: "Total quantity",
-              value: "38",
-              valueColor: AppColors.blackColor,
-            ),
-            const SizedBox(height: 30),
-            const OrderSettingsText(
-              label: "Estimated total",
-              value: "\$1402.96",
-              valueColor: AppColors.blackColor,
-            ),
-            const SizedBox(height: 30),
-            const OrderSettingsText(
-              label: "Location",
-              value: "355 Onderdonk St\nMarina Dubai, UAE",
-              valueColor: AppColors.blackColor,
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              "Delivery instructions...",
-              style: TextStyle(
-                color: AppColors.tealColorLite,
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 22),
-            Container(
-              height: 60,
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: AppColors.tealColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Center(
-                child: Text(
-                  "Submit",
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_sharp,
+                        color: AppColors.tealColor,
+                        size: 35,
+                      ),
+                    )),
+                const SizedBox(height: 30),
+                const OrderSettingsText(
+                  label: "Order#",
+                  value: "112096",
+                ),
+                const SizedBox(height: 30),
+                const OrderSettingsText(
+                  label: "Order name",
+                  value: "Joe’s catering",
+                ),
+                const SizedBox(height: 30),
+                const OrderSettingsText(
+                  label: "Delivery date",
+                  value: "May 4th 3024",
+                ),
+                const SizedBox(height: 30),
+                const OrderSettingsText(
+                  label: "Total quantity",
+                  value: "38",
+                  valueColor: AppColors.blackColor,
+                ),
+                const SizedBox(height: 30),
+                const OrderSettingsText(
+                  label: "Estimated total",
+                  value: "\$1402.96",
+                  valueColor: AppColors.blackColor,
+                ),
+                const SizedBox(height: 30),
+                const OrderSettingsText(
+                  label: "Location",
+                  value: "355 Onderdonk St\nMarina Dubai, UAE",
+                  valueColor: AppColors.blackColor,
+                ),
+                const SizedBox(height: 30),
+                const Text(
+                  "Delivery instructions...",
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.white,
+                    color: AppColors.tealColorLite,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 22),
-            const Text(
-              "Save as draft",
-              style: TextStyle(
-                color: AppColors.tealColorLite,
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
+                const SizedBox(height: 22),
+                Container(
+                  height: 60,
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                    color: AppColors.tealColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 22),
+                const Text(
+                  "Save as draft",
+                  style: TextStyle(
+                    color: AppColors.tealColorLite,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
