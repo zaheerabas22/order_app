@@ -36,11 +36,8 @@ This Flutter project focuses on creating an order management application. Here's
 - Implemented functionality where users can add notes and images to product entries.
 - Users can open a modal by double-tapping or long-pressing on a row where a product name is entered.
 - The modal allows writing notes and selecting images, displaying corresponding icons (info or camera) in the row based on user actions.
-
-## Usage
-To use the application:
 1. Enter product details (quantity and name) in the table.
 2. Navigate to the preview screen using the 'arrow forward' icon.
 3. Double-tap or long-press on a row to add notes or select images.
 
-This project aims to provide a comprehensive solution for managing orders efficiently. For any inquiries or issues, please feel free to contact me.
+
