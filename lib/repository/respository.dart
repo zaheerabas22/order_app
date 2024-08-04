@@ -1,7 +1,4 @@
 
-import 'dart:developer';
-
-import 'package:order_app/common_widgets/auto_complete.dart';
 import 'package:order_app/models/product_response.dart';
 import 'package:order_app/network/network_api_service.dart';
 
