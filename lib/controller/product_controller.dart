@@ -15,7 +15,7 @@ void fetchProductList(){
   isLoading(true);
   apiRepository.getProductList().then((value){
 
-    log('${value.products.toString()}');
+    log(value.products.toString());
     isLoading(false);
     products.value=value as List;
   }).onError((error, stackTrace){

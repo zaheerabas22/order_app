@@ -8,8 +8,10 @@ import 'package:order_app/screens/ordr_settings.dart';
 
 class OrderScreenTyped extends StatelessWidget {
   final ImageNoteController controller = Get.put(ImageNoteController());
+  final String orderNumber; // Add a field for the order number
 
-  OrderScreenTyped({super.key});
+  // Update the constructor to accept orderNumber
+  OrderScreenTyped({super.key, required this.orderNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,13 @@ class OrderScreenTyped extends StatelessWidget {
       ),
       body: GetBuilder<ImageNoteController>(
         builder: (controller) {
-          List<Product> allProducts = [
-            ...controller.items,
-            ...List.generate(10, (index) => Product(quantity: '', name: ''))
-          ];
+          List<Product> filteredProducts = controller.items
+              .where((product) =>
+                  product.quantity.isNotEmpty || product.name.isNotEmpty)
+              .toList();
+
+          filteredProducts.addAll(
+              List.generate(10, (index) => Product(quantity: '', name: '')));
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -64,9 +69,9 @@ class OrderScreenTyped extends StatelessWidget {
                 child: Column(
                   children: [
                     RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: [
-                          TextSpan(
+                          const TextSpan(
                             text: 'Order # ',
                             style: TextStyle(
                               color: Colors.purple,
@@ -75,8 +80,8 @@ class OrderScreenTyped extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: '112096',
-                            style: TextStyle(
+                            text: orderNumber, // Use the passed orderNumber
+                            style: const TextStyle(
                               color: Colors.teal,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -91,7 +96,7 @@ class OrderScreenTyped extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: allProducts.isEmpty
+                  child: filteredProducts.isEmpty
                       ? const Center(
                           child: Text('No products to display'),
                         )
@@ -107,9 +112,9 @@ class OrderScreenTyped extends StatelessWidget {
                               ),
                             ),
                             ListView.builder(
-                              itemCount: allProducts.length,
+                              itemCount: filteredProducts.length,
                               itemBuilder: (context, index) {
-                                final Product product = allProducts[index];
+                                final Product product = filteredProducts[index];
                                 return GestureDetector(
                                   onDoubleTap: () => controller.showEditModal(
                                       context, product),
@@ -161,7 +166,7 @@ class OrderScreenTyped extends StatelessWidget {
                                                       fontSize: 16),
                                                 ),
                                               ),
-                                              if (product.note!.isNotEmpty)
+                                              if (product.note.isNotEmpty)
                                                 const Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 8.0),
@@ -169,7 +174,7 @@ class OrderScreenTyped extends StatelessWidget {
                                                       Icons.info_outline,
                                                       color: Colors.teal),
                                                 ),
-                                              if (product.imagePath!.isNotEmpty)
+                                              if (product.imagePath.isNotEmpty)
                                                 const Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 8.0),

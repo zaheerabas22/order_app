@@ -8,15 +8,17 @@ import 'package:order_app/models/product_model.dart';
 import 'package:order_app/screens/order_screen_typed.dart';
 
 class OrderScreenNoTyped extends StatefulWidget {
-  const OrderScreenNoTyped({Key? key}) : super(key: key);
+  const OrderScreenNoTyped({super.key});
 
   @override
-  _OrderScreenNoTypedState createState() => _OrderScreenNoTypedState();
+  OrderScreenNoTypedState createState() => OrderScreenNoTypedState();
 }
 
-class _OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
+class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
   final ImageNoteController controller = Get.put(ImageNoteController());
-  bool isButtonEnabled = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _orderNumberController =
+      TextEditingController(text: '112096');
 
   @override
   void initState() {
@@ -31,17 +33,33 @@ class _OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
   }
 
   void _addRow() {
-    controller.addProduct(Product(quantity: '', name: ''));
+    setState(() {
+      controller.addProduct(Product(quantity: '', name: ''));
+    });
   }
 
   bool _shouldEnableButton() {
-    for (int i = 0; i < controller.items.length; i++) {
-      if (controller.items[i].quantity.isNotEmpty ||
-          controller.items[i].name.isNotEmpty) {
-        return true;
+    bool isValid = false;
+    for (var product in controller.items) {
+      if (product.name.isNotEmpty || product.quantity.isNotEmpty) {
+        if (!_isProductValid(product)) {
+          return false;
+        }
+        isValid = true;
       }
     }
-    return false;
+    return isValid;
+  }
+
+  bool _isProductValid(Product product) {
+    if (product.name.isNotEmpty &&
+        !RegExp(r'^[a-zA-Z\s]+$').hasMatch(product.name)) {
+      return false;
+    }
+    if (product.quantity.isNotEmpty && int.tryParse(product.quantity) == null) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -53,193 +71,235 @@ class _OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
       ),
       body: GetBuilder<ImageNoteController>(
         builder: (controller) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.to(OrderScreenTyped());
-                      },
-                      icon: Icon(
-                        Icons.arrow_forward,
-                        color: _shouldEnableButton()
-                            ? AppColors.tealColorLite
-                            : Colors.grey,
-                        size: 35,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                height: 30,
-                margin: const EdgeInsets.only(left: 40),
-                child: Column(
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Order # ',
-                            style: TextStyle(
-                              color: Colors.purple,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '112096',
-                            style: TextStyle(
-                              color: Colors.teal,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Stack(
+          return Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Positioned(
-                        left: 60,
-                        top: 7,
-                        bottom: 0,
-                        child: Container(
-                          width: 1,
-                          color: Colors.teal,
+                      IconButton(
+                        onPressed: _shouldEnableButton()
+                            ? () {
+                                Get.to(OrderScreenTyped(
+                                    orderNumber: _orderNumberController.text));
+                              }
+                            : null,
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          color: _shouldEnableButton()
+                              ? AppColors.tealColorLite
+                              : Colors.grey,
+                          size: 35,
                         ),
-                      ),
-                      ListView.builder(
-                        itemCount: controller.items.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(left: 20),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom:
-                                    BorderSide(color: Colors.teal, width: 0.5),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 0),
-                                    child: TextFormField(
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-                                      style: const TextStyle(fontSize: 16),
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (value) {
-                                        controller.items[index].quantity =
-                                            value;
-                                        setState(() {
-                                          isButtonEnabled =
-                                              _shouldEnableButton();
-                                        });
-                                      },
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter quantity';
-                                        }
-                                        if (int.tryParse(value) == null) {
-                                          return 'Please enter valid number';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 9,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
-                                    child: Autocomplete<String>(
-                                      optionsBuilder:
-                                          (TextEditingValue textEditingValue) {
-                                        return productNames
-                                            .where((productName) {
-                                          return productName
-                                              .toLowerCase()
-                                              .contains(textEditingValue.text
-                                                  .toLowerCase());
-                                        }).toList();
-                                      },
-                                      onSelected: (String selectedProduct) {
-                                        controller.items[index].name =
-                                            selectedProduct;
-                                        setState(() {
-                                          isButtonEnabled =
-                                              _shouldEnableButton();
-                                        });
-                                      },
-                                      fieldViewBuilder: (BuildContext context,
-                                          TextEditingController
-                                              textEditingController,
-                                          FocusNode focusNode,
-                                          VoidCallback onFieldSubmitted) {
-                                        textEditingController.text =
-                                            controller.items[index].name;
-                                        return TextFormField(
-                                          controller: textEditingController,
-                                          focusNode: focusNode,
-                                          onFieldSubmitted: (_) =>
-                                              onFieldSubmitted(),
-                                          decoration: const InputDecoration(
-                                            border: InputBorder.none,
-                                          ),
-                                          style: const TextStyle(fontSize: 16),
-                                          onChanged: (value) {
-                                            controller.items[index].name =
-                                                value;
-                                            setState(() {
-                                              isButtonEnabled =
-                                                  _shouldEnableButton();
-                                            });
-                                          },
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return 'Please enter product name';
-                                            }
-                                            if (!RegExp(r'^[a-zA-Z]+$')
-                                                .hasMatch(value)) {
-                                              return 'Only alphabets are allowed';
-                                            }
-                                            return null;
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Order #',
+                        style: TextStyle(
+                          color: Colors.purple,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _orderNumberController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(
+                            color: Colors.teal,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: controller.items.isEmpty
+                        ? const Center(
+                            child: Text('No products to display'),
+                          )
+                        : SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 60,
+                                      top: 7,
+                                      bottom: 0,
+                                      child: Container(
+                                        width: 1,
+                                        color: Colors.teal,
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      itemCount: controller.items.length,
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final product = controller.items[index];
+                                        return Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 20),
+                                          decoration: const BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.teal,
+                                                  width: 0.5),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(horizontal: 0),
+                                                  child: TextFormField(
+                                                    initialValue:
+                                                        product.quantity,
+                                                    decoration: InputDecoration(
+                                                      border: InputBorder.none,
+                                                      errorText: _isProductValid(
+                                                              product)
+                                                          ? null
+                                                          : 'Please enter a valid number',
+                                                    ),
+                                                    style: const TextStyle(
+                                                        fontSize: 16),
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        product.quantity =
+                                                            value;
+                                                      });
+                                                    },
+                                                    validator: (value) {
+                                                      if (value!.isEmpty) {
+                                                        return 'Please enter quantity';
+                                                      }
+                                                      if (int.tryParse(value) ==
+                                                          null) {
+                                                        return 'Please enter a valid number';
+                                                      }
+                                                      return null;
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 9,
+                                                child: Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 15),
+                                                  child: Autocomplete<String>(
+                                                    optionsBuilder:
+                                                        (TextEditingValue
+                                                            textEditingValue) {
+                                                      return productNames
+                                                          .where((productName) {
+                                                        return productName
+                                                            .toLowerCase()
+                                                            .contains(
+                                                                textEditingValue
+                                                                    .text
+                                                                    .toLowerCase());
+                                                      }).toList();
+                                                    },
+                                                    onSelected: (String
+                                                        selectedProduct) {
+                                                      setState(() {
+                                                        product.name =
+                                                            selectedProduct;
+                                                      });
+                                                    },
+                                                    fieldViewBuilder: (BuildContext
+                                                            context,
+                                                        TextEditingController
+                                                            textEditingController,
+                                                        FocusNode focusNode,
+                                                        VoidCallback
+                                                            onFieldSubmitted) {
+                                                      textEditingController
+                                                          .text = product.name;
+                                                      return TextFormField(
+                                                        controller:
+                                                            textEditingController,
+                                                        focusNode: focusNode,
+                                                        onFieldSubmitted: (_) =>
+                                                            onFieldSubmitted(),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          border:
+                                                              InputBorder.none,
+                                                          errorText: product
+                                                                      .name
+                                                                      .isNotEmpty &&
+                                                                  !RegExp(r'^[a-zA-Z\s]+$')
+                                                                      .hasMatch(
+                                                                          product
+                                                                              .name)
+                                                              ? 'Only alphabets and spaces are allowed'
+                                                              : null,
+                                                        ),
+                                                        style: const TextStyle(
+                                                            fontSize: 16),
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            product.name =
+                                                                value;
+                                                          });
+                                                        },
+                                                        validator: (value) {
+                                                          if (value!
+                                                                  .isNotEmpty &&
+                                                              !RegExp(r'^[a-zA-Z\s]+$')
+                                                                  .hasMatch(
+                                                                      value)) {
+                                                            return 'Only alphabets and spaces are allowed';
+                                                          }
+                                                          return null;
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
