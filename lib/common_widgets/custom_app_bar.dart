@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Image? imagedrawer;
 
-  const CustomAppBar({Key? key, this.imagedrawer}) : super(key: key);
+  const CustomAppBar({super.key, this.imagedrawer});
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +14,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: imagedrawer ?? const Text(" "),
       ),
       flexibleSpace: Padding(
-        padding: const EdgeInsets.only(top: 20.0),
+        padding: const EdgeInsets.only(top: 23.0),
         child: Image.asset(
           "assets/images/logo.png",
-          height: 100,
-          scale: 1.5,
+          height: 123,
+          width: 123,
         ),
       ),
       centerTitle: true,
@@ -26,5 +26,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => const Size.fromHeight(60);
 }

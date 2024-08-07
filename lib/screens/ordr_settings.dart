@@ -68,7 +68,7 @@ class OrderSettings extends StatelessWidget {
                 const Text(
                   "Delivery instructions...",
                   style: TextStyle(
-                    color: AppColors.tealColorLite,
+                    color: AppColors.tealColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -96,7 +96,7 @@ class OrderSettings extends StatelessWidget {
                 const Text(
                   "Save as draft",
                   style: TextStyle(
-                    color: AppColors.tealColorLite,
+                    color: AppColors.tealColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -115,7 +115,7 @@ class OrderSettingsText extends StatelessWidget {
     super.key,
     required this.label,
     required this.value,
-    this.valueColor = AppColors.tealColorLite,
+    this.valueColor = AppColors.tealColor,
   });
 
   final String label;

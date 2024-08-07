@@ -18,7 +18,10 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
   final ImageNoteController controller = Get.put(ImageNoteController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _orderNumberController =
-      TextEditingController(text: '112096');
+      TextEditingController(text: '11206');
+
+  List<FocusNode> quantityFocusNodes = [];
+  List<FocusNode> nameFocusNodes = [];
 
   @override
   void initState() {
@@ -29,12 +32,20 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
   void _addInitialRows() {
     for (int i = 0; i < 10; i++) {
       controller.addProduct(Product(quantity: '', name: ''));
+      quantityFocusNodes.add(FocusNode());
+      nameFocusNodes.add(FocusNode());
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusOnEmptyRow();
+    });
   }
 
   void _addRow() {
     setState(() {
       controller.addProduct(Product(quantity: '', name: ''));
+      quantityFocusNodes.add(FocusNode());
+      nameFocusNodes.add(FocusNode());
+      _focusOnEmptyRow();
     });
   }
 
@@ -62,157 +73,186 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
     return true;
   }
 
+  void _focusOnEmptyRow() {
+    for (int i = 0; i < controller.items.length; i++) {
+      if (controller.items[i].quantity.isEmpty ||
+          controller.items[i].name.isEmpty) {
+        FocusScope.of(context).requestFocus(quantityFocusNodes[i]);
+        break;
+      }
+    }
+  }
+
+  void _handleFieldSubmitted(int index) {
+    _focusOnEmptyRow();
+  }
+
+  void _handleFloatingActionButton() {
+    _addRow();
+  }
+
+  void _handleSubmit() {
+    if (_formKey.currentState!.validate()) {
+      Get.to(OrderScreenTyped(orderNumber: _orderNumberController.text));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        imagedrawer: Image.asset("assets/icons/drawer.png"),
+        imagedrawer: Image.asset(
+          "assets/icons/drawer.png",
+          width: 23.25,
+          height: 17,
+        ),
       ),
       body: GetBuilder<ImageNoteController>(
         builder: (controller) {
           return Form(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: _shouldEnableButton()
-                            ? () {
-                                Get.to(OrderScreenTyped(
-                                    orderNumber: _orderNumberController.text));
-                              }
-                            : null,
-                        icon: Icon(
-                          Icons.arrow_forward,
-                          color: _shouldEnableButton()
-                              ? AppColors.tealColorLite
-                              : Colors.grey,
-                          size: 35,
-                        ),
-                      ),
-                    ],
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: IconButton(
+                    onPressed: _shouldEnableButton() ? _handleSubmit : null,
+                    icon: Icon(
+                      Icons.arrow_forward,
+                      color: _shouldEnableButton()
+                          ? AppColors.tealColor
+                          : Colors.grey,
+                      size: 35,
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Order #',
-                        style: TextStyle(
-                          color: Colors.purple,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _orderNumberController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          style: const TextStyle(
-                            color: Colors.teal,
-                            fontSize: 18,
+                  padding: const EdgeInsets.symmetric(horizontal: 17.0),
+                  child: SizedBox(
+                    height: 26.6,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Order #',
+                          style: TextStyle(
+                            color: AppColors.purpleColor,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _orderNumberController,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            style: const TextStyle(
+                              color: AppColors.tealColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: controller.items.isEmpty
-                        ? const Center(
-                            child: Text('No products to display'),
-                          )
-                        : SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Positioned(
-                                      left: 60,
-                                      top: 7,
-                                      bottom: 0,
-                                      child: Container(
-                                        width: 1,
-                                        color: Colors.teal,
-                                      ),
+                  child: controller.items.isEmpty
+                      ? const Center(
+                          child: Text('No products to display'),
+                        )
+                      : SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  Positioned(
+                                    left: 60,
+                                    top: 14,
+                                    bottom: 0,
+                                    child: Container(
+                                      width: 1,
+                                      color: AppColors.tealColor,
                                     ),
-                                    ListView.builder(
-                                      itemCount: controller.items.length,
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        final product = controller.items[index];
-                                        return Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 20),
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.teal,
-                                                  width: 0.5),
-                                            ),
+                                  ),
+                                  ListView.builder(
+                                    itemCount: controller.items.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final product = controller.items[index];
+                                      return Container(
+                                        margin: const EdgeInsets.only(left: 20),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                                color: AppColors.tealColor,
+                                                width: 0.9),
                                           ),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(horizontal: 0),
-                                                  child: TextFormField(
-                                                    initialValue:
-                                                        product.quantity,
-                                                    decoration: InputDecoration(
-                                                      border: InputBorder.none,
-                                                      errorText: _isProductValid(
-                                                              product)
-                                                          ? null
-                                                          : 'Please enter a valid number',
-                                                    ),
-                                                    style: const TextStyle(
-                                                        fontSize: 16),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        product.quantity =
-                                                            value;
-                                                      });
-                                                    },
-                                                    validator: (value) {
-                                                      if (value!.isEmpty) {
-                                                        return 'Please enter quantity';
-                                                      }
-                                                      if (int.tryParse(value) ==
-                                                          null) {
-                                                        return 'Please enter a valid number';
-                                                      }
-                                                      return null;
-                                                    },
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 0),
+                                                child: TextFormField(
+                                                  initialValue:
+                                                      product.quantity,
+                                                  focusNode:
+                                                      quantityFocusNodes[index],
+                                                  decoration: InputDecoration(
+                                                    border: InputBorder.none,
+                                                    errorText: product.quantity
+                                                                .isNotEmpty &&
+                                                            !RegExp(r'^[0-9]+$')
+                                                                .hasMatch(product
+                                                                    .quantity)
+                                                        ? 'Please enter a valid number'
+                                                        : null,
                                                   ),
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      product.quantity = value;
+                                                    });
+                                                  },
+                                                  validator: (value) {
+                                                    if (value!.isNotEmpty &&
+                                                        int.tryParse(value) ==
+                                                            null) {
+                                                      return 'Please enter a valid number';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  onFieldSubmitted: (_) {
+                                                    _handleFieldSubmitted(
+                                                        index);
+                                                  },
                                                 ),
                                               ),
-                                              Expanded(
-                                                flex: 9,
-                                                child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 15),
+                                            ),
+                                            Expanded(
+                                              flex: 9,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15),
+                                                child: SizedBox(
+                                                  height: 60,
                                                   child: Autocomplete<String>(
                                                     optionsBuilder:
                                                         (TextEditingValue
@@ -233,22 +273,27 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
                                                         product.name =
                                                             selectedProduct;
                                                       });
+                                                      _focusOnEmptyRow();
                                                     },
-                                                    fieldViewBuilder: (BuildContext
-                                                            context,
-                                                        TextEditingController
-                                                            textEditingController,
-                                                        FocusNode focusNode,
-                                                        VoidCallback
-                                                            onFieldSubmitted) {
+                                                    fieldViewBuilder: (
+                                                      BuildContext context,
+                                                      TextEditingController
+                                                          textEditingController,
+                                                      FocusNode focusNode,
+                                                      VoidCallback
+                                                          onFieldSubmitted,
+                                                    ) {
                                                       textEditingController
                                                           .text = product.name;
                                                       return TextFormField(
                                                         controller:
                                                             textEditingController,
                                                         focusNode: focusNode,
-                                                        onFieldSubmitted: (_) =>
-                                                            onFieldSubmitted(),
+                                                        onFieldSubmitted: (_) {
+                                                          onFieldSubmitted();
+                                                          _handleFieldSubmitted(
+                                                              index);
+                                                        },
                                                         decoration:
                                                             InputDecoration(
                                                           border:
@@ -286,17 +331,17 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                  ),
+                        ),
                 ),
               ],
             ),
@@ -304,10 +349,13 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _shouldEnableButton() ? _addRow : null,
+        onPressed: _shouldEnableButton() ? _handleFloatingActionButton : null,
         backgroundColor:
-            _shouldEnableButton() ? AppColors.tealColorLite : Colors.grey,
-        child: const Icon(Icons.add),
+            _shouldEnableButton() ? AppColors.tealColor : Colors.grey,
+        child: const Icon(
+          Icons.add,
+          color: AppColors.whiteColor,
+        ),
       ),
     );
   }

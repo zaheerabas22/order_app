@@ -8,9 +8,8 @@ import 'package:order_app/screens/ordr_settings.dart';
 
 class OrderScreenTyped extends StatelessWidget {
   final ImageNoteController controller = Get.put(ImageNoteController());
-  final String orderNumber; // Add a field for the order number
+  final String orderNumber;
 
-  // Update the constructor to accept orderNumber
   OrderScreenTyped({super.key, required this.orderNumber});
 
   @override
@@ -18,7 +17,11 @@ class OrderScreenTyped extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        imagedrawer: Image.asset("assets/icons/drawer.png"),
+        imagedrawer: Image.asset(
+          "assets/icons/drawer.png",
+          width: 23.25,
+          height: 17,
+        ),
       ),
       body: GetBuilder<ImageNoteController>(
         builder: (controller) {
@@ -34,7 +37,6 @@ class OrderScreenTyped extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40.0),
                 child: Row(
@@ -55,7 +57,7 @@ class OrderScreenTyped extends StatelessWidget {
                       },
                       icon: const Icon(
                         Icons.arrow_forward,
-                        color: AppColors.tealColorLite,
+                        color: AppColors.tealColor,
                         size: 35,
                       ),
                     ),
@@ -75,15 +77,15 @@ class OrderScreenTyped extends StatelessWidget {
                             text: 'Order # ',
                             style: TextStyle(
                               color: Colors.purple,
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           TextSpan(
-                            text: orderNumber, // Use the passed orderNumber
+                            text: orderNumber,
                             style: const TextStyle(
-                              color: Colors.teal,
-                              fontSize: 18,
+                              color: AppColors.tealColor,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -95,7 +97,7 @@ class OrderScreenTyped extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: filteredProducts.isEmpty
                       ? const Center(
                           child: Text('No products to display'),
@@ -103,12 +105,12 @@ class OrderScreenTyped extends StatelessWidget {
                       : Stack(
                           children: [
                             Positioned(
-                              left: 60,
+                              left: 53,
                               top: 7,
                               bottom: 0,
                               child: Container(
                                 width: 1,
-                                color: Colors.teal,
+                                color: AppColors.tealColor,
                               ),
                             ),
                             ListView.builder(
@@ -132,7 +134,8 @@ class OrderScreenTyped extends StatelessWidget {
                                         decoration: const BoxDecoration(
                                           border: Border(
                                             bottom: BorderSide(
-                                                color: Colors.teal, width: 0.5),
+                                                color: AppColors.tealColor,
+                                                width: 1),
                                           ),
                                         ),
                                         child: Row(
@@ -151,8 +154,8 @@ class OrderScreenTyped extends StatelessWidget {
                                           decoration: const BoxDecoration(
                                             border: Border(
                                               bottom: BorderSide(
-                                                  color: Colors.teal,
-                                                  width: 0.5),
+                                                  color: AppColors.tealColor,
+                                                  width: 1),
                                             ),
                                           ),
                                           child: Row(
