@@ -45,8 +45,19 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
       controller.addProduct(Product(quantity: '', name: ''));
       quantityFocusNodes.add(FocusNode());
       nameFocusNodes.add(FocusNode());
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusOnEmptyRow();
     });
+  }
+
+  bool _isAllRowsFilled() {
+    for (var product in controller.items) {
+      if (product.name.isEmpty || product.quantity.isEmpty) {
+        return false;
+      }
+    }
+    return true;
   }
 
   bool _shouldEnableButton() {
@@ -84,11 +95,11 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
   }
 
   void _handleFieldSubmitted(int index) {
-    _focusOnEmptyRow();
-  }
-
-  void _handleFloatingActionButton() {
-    _addRow();
+    if (_isAllRowsFilled()) {
+      _addRow();
+    } else {
+      _focusOnEmptyRow();
+    }
   }
 
   void _handleSubmit() {
@@ -116,51 +127,48 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 40.0),
-                  child: IconButton(
-                    onPressed: _shouldEnableButton() ? _handleSubmit : null,
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      color: _shouldEnableButton()
-                          ? AppColors.tealColor
-                          : Colors.grey,
-                      size: 35,
-                    ),
+                IconButton(
+                  padding: const EdgeInsets.only(
+                    right: 40,
+                  ),
+                  onPressed: _shouldEnableButton() ? _handleSubmit : null,
+                  icon: Icon(
+                    Icons.arrow_forward,
+                    color: _shouldEnableButton()
+                        ? AppColors.tealColor
+                        : Colors.grey,
+                    size: 35,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 17.0),
-                  child: SizedBox(
-                    height: 26.6,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Order #',
-                          style: TextStyle(
-                            color: AppColors.purpleColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Order #',
+                        style: TextStyle(
+                          color: AppColors.purpleColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _orderNumberController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(
+                            color: AppColors.tealColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _orderNumberController,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            style: const TextStyle(
-                              color: AppColors.tealColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -273,7 +281,8 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
                                                         product.name =
                                                             selectedProduct;
                                                       });
-                                                      _focusOnEmptyRow();
+                                                      _handleFieldSubmitted(
+                                                          index);
                                                     },
                                                     fieldViewBuilder: (
                                                       BuildContext context,
@@ -347,15 +356,6 @@ class OrderScreenNoTypedState extends State<OrderScreenNoTyped> {
             ),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _shouldEnableButton() ? _handleFloatingActionButton : null,
-        backgroundColor:
-            _shouldEnableButton() ? AppColors.tealColor : Colors.grey,
-        child: const Icon(
-          Icons.add,
-          color: AppColors.whiteColor,
-        ),
       ),
     );
   }

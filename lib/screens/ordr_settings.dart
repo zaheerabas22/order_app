@@ -4,7 +4,14 @@ import 'package:order_app/common_widgets/custom_app_bar.dart';
 import 'package:order_app/constants/colors.dart';
 
 class OrderSettings extends StatelessWidget {
-  const OrderSettings({super.key});
+  final String orderNumber;
+  final int totalQuantity; // Add this field
+
+  const OrderSettings({
+    super.key,
+    required this.orderNumber,
+    required this.totalQuantity, // Initialize this field
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +27,22 @@ class OrderSettings extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back_sharp,
-                        color: AppColors.tealColor,
-                        size: 35,
-                      ),
-                    )),
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_sharp,
+                      color: AppColors.tealColor,
+                      size: 35,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 30),
-                const OrderSettingsText(
+                OrderSettingsText(
                   label: "Order#",
-                  value: "112096",
+                  value: orderNumber,
                 ),
                 const SizedBox(height: 30),
                 const OrderSettingsText(
@@ -47,9 +55,9 @@ class OrderSettings extends StatelessWidget {
                   value: "May 4th 3024",
                 ),
                 const SizedBox(height: 30),
-                const OrderSettingsText(
+                OrderSettingsText(
                   label: "Total quantity",
-                  value: "38",
+                  value: totalQuantity.toString(), // Use the passed quantity
                   valueColor: AppColors.blackColor,
                 ),
                 const SizedBox(height: 30),
@@ -134,7 +142,7 @@ class OrderSettingsText extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.purpleColor,
               fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),

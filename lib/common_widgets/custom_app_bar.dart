@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_app/constants/colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Image? imagedrawer;
@@ -8,6 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      surfaceTintColor: AppColors.whiteColor,
       backgroundColor: Colors.white,
       leading: IconButton(
         onPressed: () {},

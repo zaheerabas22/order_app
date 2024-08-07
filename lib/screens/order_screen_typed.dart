@@ -33,12 +33,17 @@ class OrderScreenTyped extends StatelessWidget {
           filteredProducts.addAll(
               List.generate(10, (index) => Product(quantity: '', name: '')));
 
+          int totalQuantity = filteredProducts.fold(
+            0,
+            (sum, product) => sum + (int.tryParse(product.quantity) ?? 0),
+          );
+
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                padding: const EdgeInsets.only(right: 40.0, left: 49),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -53,7 +58,10 @@ class OrderScreenTyped extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {
-                        Get.to(const OrderSettings());
+                        Get.to(OrderSettings(
+                          orderNumber: orderNumber,
+                          totalQuantity: totalQuantity,
+                        ));
                       },
                       icon: const Icon(
                         Icons.arrow_forward,
@@ -70,27 +78,30 @@ class OrderScreenTyped extends StatelessWidget {
                 margin: const EdgeInsets.only(left: 20),
                 child: Column(
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: 'Order # ',
-                            style: TextStyle(
-                              color: Colors.purple,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Order #',
+                          style: TextStyle(
+                            color: AppColors.purpleColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
-                          TextSpan(
-                            text: orderNumber,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            orderNumber,
                             style: const TextStyle(
                               color: AppColors.tealColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
